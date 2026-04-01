@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "Hx25Xgr45kZMCF+ZgtuejT01/aYsFkbOrw3buks3AbQ=",
+  "Source": "DeviceTrackr.Api",
+  "BasePath": "_content/DeviceTrackr.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
