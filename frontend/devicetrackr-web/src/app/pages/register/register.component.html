@@ -1,0 +1,36 @@
+<div class="prime-app">
+  <header class="prime-header">
+    <div class="prime-header-inner">
+      <span class="prime-brand">Device<span class="prime-accent">Trackr</span></span>
+    </div>
+  </header>
+
+  <main class="prime-main center">
+    <div class="container auth-page">
+      <h1>Cont nou</h1>
+      <p class="hint">Completează datele. Rolul și locația apar în sistemul de urmărire.</p>
+
+      <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+      <div class="panel">
+        <h2>Înregistrare</h2>
+        <form [formGroup]="form" (ngSubmit)="submit()">
+          <label>
+            Nume afișat (opțional)
+            <input type="text" formControlName="name" placeholder="Lasă gol pentru a folosi partea din email" />
+          </label>
+          <label>Email *<input type="email" formControlName="email" autocomplete="username" /></label>
+          <label>Parolă *<input type="password" formControlName="password" autocomplete="new-password" /></label>
+          <label>Rol *<input type="text" formControlName="role" placeholder="ex: Developer, Manager" /></label>
+          <label>Locație *<input type="text" formControlName="location" placeholder="ex: București, Cluj" /></label>
+          <button type="submit">Creează cont</button>
+        </form>
+
+        <div class="auth-footer">
+          <span>Ai deja cont? </span>
+          <a routerLink="/login" class="link">Autentifică-te</a>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

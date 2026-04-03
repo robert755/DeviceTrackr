@@ -1,0 +1,103 @@
+<div class="prime-app">
+  <header class="prime-header">
+    <div class="prime-header-inner">
+      <span class="prime-brand">Device<span class="prime-accent">Trackr</span></span>
+      <div class="prime-header-actions" *ngIf="currentUser as u">
+        <span class="prime-user" [title]="u.email">{{ u.name }}</span>
+        <button type="button" class="btn btn-outline" (click)="logout()">Ieșire</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="prime-main">
+    <div class="container">
+      <p class="section-title">Panou <span>dispozitive</span></p>
+
+      <p class="message error" *ngIf="errorMessage">{{ errorMessage }}</p>
+      <p class="message success" *ngIf="successMessage">{{ successMessage }}</p>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Lista dispozitive</h2>
+          <button type="button" class="btn btn-primary" (click)="startCreate()">+ Dispozitiv nou</button>
+        </div>
+
+        <p *ngIf="loading" class="hint" style="margin-bottom: 0">Se încarcă...</p>
+
+        <div class="table-wrap" *ngIf="!loading">
+          <table>
+            <thead>
+              <tr>
+                <th>Id</th>
+                <th>Nume</th>
+                <th>Producător</th>
+                <th>Tip</th>
+                <th>Utilizator</th>
+                <th>Acțiuni</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let device of devices">
+                <td>{{ device.id }}</td>
+                <td><strong>{{ device.name }}</strong></td>
+                <td>{{ device.manufacturer }}</td>
+                <td>{{ device.type === 1 ? 'Telefon' : 'Tabletă' }}</td>
+                <td>{{ getAssignedUserText(device) }}</td>
+                <td class="actions">
+                  <button type="button" (click)="selectDevice(device)">Detalii</button>
+                  <button type="button" *ngIf="canModifyDevice(device)" (click)="startEdit(device)">Editează</button>
+                  <button type="button" *ngIf="canAssign(device)" (click)="assignToMe(device)">Alocă mie</button>
+                  <button type="button" *ngIf="canUnassign(device)" (click)="unassignFromMe(device)">Dealocă</button>
+                  <button type="button" *ngIf="canModifyDevice(device)" class="danger" (click)="deleteDevice(device)">Șterge</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>Detalii</h2>
+          <p *ngIf="!selectedDevice" class="hint" style="margin-bottom: 0">Selectează un rând din listă.</p>
+          <p *ngIf="selectedDevice && !canModifyDevice(selectedDevice)" class="hint" style="margin-bottom: 12px">
+            Acest dispozitiv este alocat: editarea și ștergerea sunt disponibile doar pentru dispozitive nealocate (dealocă mai întâi).
+          </p>
+          <div *ngIf="selectedDevice" class="details">
+            <p><strong>Id:</strong> {{ selectedDevice.id }}</p>
+            <p><strong>Nume:</strong> {{ selectedDevice.name }}</p>
+            <p><strong>Producător:</strong> {{ selectedDevice.manufacturer }}</p>
+            <p><strong>Tip:</strong> {{ selectedDevice.type === 1 ? 'Telefon' : 'Tabletă' }}</p>
+            <p><strong>OS:</strong> {{ selectedDevice.operatingSystem }}</p>
+            <p><strong>Versiune OS:</strong> {{ selectedDevice.osVersion }}</p>
+            <p><strong>Procesor:</strong> {{ selectedDevice.processor }}</p>
+            <p><strong>RAM (GB):</strong> {{ selectedDevice.ramAmountGb }}</p>
+            <p><strong>Descriere:</strong> {{ selectedDevice.description }}</p>
+            <p><strong>Alocat la:</strong> {{ getAssignedUserText(selectedDevice) }}</p>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2>{{ isEditMode ? 'Actualizează dispozitiv' : 'Adaugă dispozitiv' }}</h2>
+          <form [formGroup]="deviceForm" (ngSubmit)="saveDevice()">
+            <label>Nume<input type="text" formControlName="name" /></label>
+            <label>Producător<input type="text" formControlName="manufacturer" /></label>
+            <label>
+              Tip
+              <select formControlName="type">
+                <option [ngValue]="1">Telefon</option>
+                <option [ngValue]="2">Tabletă</option>
+              </select>
+            </label>
+            <label>Sistem de operare<input type="text" formControlName="operatingSystem" /></label>
+            <label>Versiune OS<input type="text" formControlName="osVersion" /></label>
+            <label>Procesor<input type="text" formControlName="processor" /></label>
+            <label>RAM (GB)<input type="number" formControlName="ramAmountGb" min="1" /></label>
+            <label>Descriere<textarea rows="3" formControlName="description"></textarea></label>
+            <button type="submit">{{ isEditMode ? 'Salvează' : 'Creează' }}</button>
+          </form>
+        </div>
+      </section>
+    </div>
+  </main>
+</div>
