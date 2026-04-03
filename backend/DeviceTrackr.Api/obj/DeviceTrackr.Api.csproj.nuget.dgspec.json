@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\DeviceTrackr.Api.csproj": {}
+    "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\DeviceTrackr.Api.csproj": {}
   },
   "projects": {
-    "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\DeviceTrackr.Api.csproj": {
+    "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\DeviceTrackr.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\DeviceTrackr.Api.csproj",
+        "projectUniqueName": "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\DeviceTrackr.Api.csproj",
         "projectName": "DeviceTrackr.Api",
-        "projectPath": "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\DeviceTrackr.Api.csproj",
+        "projectPath": "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\DeviceTrackr.Api.csproj",
         "packagesPath": "C:\\Users\\Ciceu\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\obj\\",
+        "outputPath": "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Ciceu\\AppData\\Roaming\\NuGet\\NuGet.Config"

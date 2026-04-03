@@ -32,15 +32,35 @@ public class DevicesController(DeviceService service) : ControllerBase
     [HttpPut("{id:int}")]
     public IActionResult Update(int id, Device device)
     {
-        var updated = service.Update(id, device);
-        return updated ? NoContent() : NotFound();
+        var (success, error) = service.Update(id, device);
+        if (success)
+        {
+            return NoContent();
+        }
+
+        if (error == "assigned")
+        {
+            return BadRequest(new { message = "Dispozitivul este alocat unui utilizator; nu poate fi modificat." });
+        }
+
+        return NotFound();
     }
 
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        var deleted = service.Delete(id);
-        return deleted ? NoContent() : NotFound();
+        var (success, error) = service.Delete(id);
+        if (success)
+        {
+            return NoContent();
+        }
+
+        if (error == "assigned")
+        {
+            return BadRequest(new { message = "Dispozitivul este alocat; dealocă-l înainte de ștergere." });
+        }
+
+        return NotFound();
     }
 
     [HttpPost("{id:int}/assign")]

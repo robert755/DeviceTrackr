@@ -65,4 +65,9 @@ public class DeviceRepository(DeviceTrackrDbContext db)
     {
         db.SaveChanges();
     }
+
+    public void Remove(Device entity)
+    {
+        db.Devices.Remove(entity);
+    }
 }
