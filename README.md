@@ -67,7 +67,7 @@ Response shape: `userId`, `name`, `email`. Passwords are stored as **SHA256 + Ba
 
 ### 3. Frontend (Angular)
 
-Dark UI theme (visually inspired by Prime Video).
+Dark UI theme.
 
 **Routes:**
 
