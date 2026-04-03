@@ -137,14 +137,3 @@ As documented in `02-seed-data.sql`:
 The seed assigns **iPhone 15** to **Ana** for demo purposes.
 
 ---
-
-## Current limitations
-
-- **Auth is in-memory in the browser only**—refreshing the page requires signing in again; the devices/users API **does not** require a token or session cookie (any client that knows the URL can call the endpoints).
-- Assignment sends `userId` in the request body—in production you would typically use the authenticated user identity on the server (JWT, cookies, etc.).
-
----
-
-## License / project type
-
-Educational / demo project—add a license file as needed.
