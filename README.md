@@ -101,34 +101,50 @@ Create the schema, then seed:
 1. Run `database/01-create-database-and-tables.sql`
 2. Run `database/02-seed-data.sql`
 
-### 2. Connection string
+### 2. Local secrets — **dotnet user-secrets** (recommended)
 
-In `backend/DeviceTrackr.Api/appsettings.json`, set **`ConnectionStrings:DefaultConnection`** for your SQL instance (server, database, authentication). **Do not commit real passwords** to Git; use User Secrets or environment variables in production.
+Keep **passwords and API keys out of Git**. The API project already has a `UserSecretsId` in `DeviceTrackr.Api.csproj`; in **Development**, ASP.NET Core loads user secrets **after** `appsettings.json` and **overrides** those values.
 
-You can also set the connection string via environment variable **`ConnectionStrings__DefaultConnection`** (same `__` rule as below).
+Open a terminal in the API folder (from the repo root):
 
-### 2b. Gemini API key (AI descriptions, optional)
+```powershell
+cd backend\DeviceTrackr.Api
+```
 
-You can put the key in **`appsettings.json`** → `Gemini:ApiKey` for local dev (do **not** commit real keys). Alternatively use an environment variable so it never lands in Git:
+The `.csproj` already defines a **UserSecretsId**, so you can skip `dotnet user-secrets init` unless the CLI tells you to initialize.
 
-| Config key | Environment variable |
-|------------|----------------------|
-| `Gemini:ApiKey` | `Gemini__ApiKey` |
-| `Gemini:Model` | `Gemini__Model` (optional; default is `gemini-1.5-flash` in appsettings) |
+**SQL connection string** — replace `YOUR_PASSWORD` (and server/user if needed):
 
-Examples:
+```powershell
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=.\SQLEXPRESS;Database=DeviceTrackr;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true"
+```
 
-- **PowerShell (current session):** `$env:Gemini__ApiKey = "your-key-here"`
-- **Windows (persistent):** System Properties → Environment variables, or `setx Gemini__ApiKey "your-key-here"`
-- **Linux/macOS:** `export Gemini__ApiKey=your-key-here`
-- **Docker:** `-e Gemini__ApiKey=your-key-here` (or compose `environment:`)
+**Gemini API key** (optional, for AI-generated descriptions) — from [Google AI Studio](https://aistudio.google.com/apikey):
 
-Alternative: `dotnet user-secrets set "Gemini:ApiKey" "your-key-here"` in the API project folder.
+```powershell
+dotnet user-secrets set "Gemini:ApiKey" "YOUR_GEMINI_API_KEY"
+```
+
+**Optional — Gemini model:**
+
+```powershell
+dotnet user-secrets set "Gemini:Model" "gemini-2.5-flash"
+```
+
+**Verify secrets are registered:**
+
+```powershell
+dotnet user-secrets list
+```
+
+`appsettings.json` can stay with placeholders (`CHANGE_ME`, empty `Gemini:ApiKey`); **user-secrets win at runtime** when `ASPNETCORE_ENVIRONMENT` is `Development` (default for `dotnet run` with the included launch profile).
+
+**Alternative (no user-secrets):** environment variables use `__` instead of `:` — e.g. `ConnectionStrings__DefaultConnection`, `Gemini__ApiKey`. Useful for Docker or production hosts.
 
 ### 3. API
 
-```bash
-cd backend/DeviceTrackr.Api
+```powershell
+cd backend\DeviceTrackr.Api
 dotnet run
 ```
 
