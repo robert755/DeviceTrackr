@@ -1,3 +1,4 @@
+using DeviceTrackr.Api.Configuration;
 using DeviceTrackr.Api.Data;
 using DeviceTrackr.Api.Repositories;
 using DeviceTrackr.Api.Services;
@@ -26,7 +27,19 @@ builder.Services.AddScoped<DeviceService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<AuthService>();
 
+builder.Services.Configure<GeminiOptions>(builder.Configuration.GetSection(GeminiOptions.SectionName));
+builder.Services.AddHttpClient<GeminiDescriptionService>(client =>
+{
+    client.Timeout = TimeSpan.FromMinutes(1);
+});
+
 var app = builder.Build();
+
+if (string.IsNullOrWhiteSpace(GeminiConfigHelper.ResolveApiKey(app.Configuration, app.Environment.ContentRootPath)))
+{
+    app.Logger.LogWarning(
+        "Gemini API key is missing after resolving env, merged config, and appsettings files. Set GEMINI_API_KEY / Gemini__ApiKey, or Gemini:ApiKey in appsettings.json (avoid an empty Gemini__ApiKey env var — it overrides the file).");
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { Device, DevicePayload } from '../../models/device';
 import { User } from '../../models/user';
 import { DeviceApiService } from '../../services/device-api.service';
@@ -21,6 +22,7 @@ export class DevicesComponent implements OnInit {
   errorMessage = '';
   successMessage = '';
   isEditMode = false;
+  generatingDescription = false;
 
   readonly deviceForm = this.fb.group({
     name: ['', Validators.required],
@@ -30,7 +32,7 @@ export class DevicesComponent implements OnInit {
     osVersion: ['', Validators.required],
     processor: ['', Validators.required],
     ramAmountGb: [4, [Validators.required, Validators.min(1)]],
-    description: ['', Validators.required]
+    description: ['']
   });
 
   constructor(
@@ -141,7 +143,7 @@ export class DevicesComponent implements OnInit {
     this.successMessage = '';
     this.errorMessage = '';
     if (this.deviceForm.invalid) {
-      this.errorMessage = 'Toate câmpurile sunt obligatorii.';
+      this.errorMessage = 'Completează câmpurile obligatorii (descrierea e opțională; o poți genera cu Gemini după salvare).';
       this.deviceForm.markAllAsTouched();
       return;
     }
@@ -270,5 +272,38 @@ export class DevicesComponent implements OnInit {
 
   canAssign(device: Device): boolean {
     return !!this.currentUser && !device.assignedUserId;
+  }
+
+  generateAiDescription(): void {
+    const d = this.selectedDevice;
+    if (!d) {
+      return;
+    }
+
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.generatingDescription = true;
+    this.api.generateDeviceDescription(d.id).subscribe({
+      next: (updated) => {
+        this.generatingDescription = false;
+        this.successMessage = 'Descriere generată cu Gemini și salvată.';
+        this.selectedDevice = updated;
+        if (this.isEditMode) {
+          this.deviceForm.patchValue({ description: updated.description });
+        }
+        this.loadAll();
+      },
+      error: (err: HttpErrorResponse) => {
+        this.generatingDescription = false;
+        const body = err.error as { message?: string; detail?: string } | null;
+        const fromApi = body?.detail || body?.message;
+        this.errorMessage =
+          typeof fromApi === 'string' && fromApi.length > 0
+            ? fromApi
+            : err.status === 400
+              ? (body?.message ?? 'Cerere invalidă (de obicei lipsește Gemini:ApiKey pe server).')
+              : `Eroare HTTP ${err.status}. Verifică consola API și setează Gemini__ApiKey pe server.`;
+      }
+    });
   }
 }

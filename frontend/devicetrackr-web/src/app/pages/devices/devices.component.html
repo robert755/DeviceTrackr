@@ -61,7 +61,7 @@
           <h2>Detalii</h2>
           <p *ngIf="!selectedDevice" class="hint" style="margin-bottom: 0">Selectează un rând din listă.</p>
           <p *ngIf="selectedDevice && !canModifyDevice(selectedDevice)" class="hint" style="margin-bottom: 12px">
-            Acest dispozitiv este alocat: editarea și ștergerea sunt disponibile doar pentru dispozitive nealocate (dealocă mai întâi).
+            Dispozitiv alocat: nu poți edita sau șterge din listă până nu e dealocat. Poți folosi în continuare <strong>Generează descriere (Gemini AI)</strong> pentru a actualiza doar descrierea.
           </p>
           <div *ngIf="selectedDevice" class="details">
             <p><strong>Id:</strong> {{ selectedDevice.id }}</p>
@@ -93,7 +93,21 @@
             <label>Versiune OS<input type="text" formControlName="osVersion" /></label>
             <label>Procesor<input type="text" formControlName="processor" /></label>
             <label>RAM (GB)<input type="number" formControlName="ramAmountGb" min="1" /></label>
-            <label>Descriere<textarea rows="3" formControlName="description"></textarea></label>
+            <label class="description-field">
+              Descriere (opțional — poți lăsa gol și genera cu AI după ce salvezi)
+              <textarea rows="3" formControlName="description" placeholder="Lasă gol sau completează manual"></textarea>
+              <button
+                type="button"
+                class="btn-ai"
+                (click)="generateAiDescription()"
+                [disabled]="!selectedDevice || generatingDescription"
+              >
+                {{ generatingDescription ? 'Se generează…' : 'Generează descriere (Gemini AI)' }}
+              </button>
+              <span class="ai-hint" *ngIf="!selectedDevice">
+                Selectează un dispozitiv din listă (click pe Detalii), apoi poți genera descrierea cu AI.
+              </span>
+            </label>
             <button type="submit">{{ isEditMode ? 'Salvează' : 'Creează' }}</button>
           </form>
         </div>

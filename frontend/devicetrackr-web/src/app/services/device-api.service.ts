@@ -54,4 +54,9 @@ export class DeviceApiService {
   unassignDevice(deviceId: number, userId: number): Observable<void> {
     return this.http.post<void>(`${this.baseUrl}/devices/${deviceId}/unassign`, { userId });
   }
+
+  /** Calls Gemini on the server and saves the returned text to Description. */
+  generateDeviceDescription(deviceId: number): Observable<Device> {
+    return this.http.post<Device>(`${this.baseUrl}/devices/${deviceId}/generate-description`, {});
+  }
 }

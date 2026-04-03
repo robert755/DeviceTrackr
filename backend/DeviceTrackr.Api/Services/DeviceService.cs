@@ -1,10 +1,17 @@
+using DeviceTrackr.Api.Configuration;
 using DeviceTrackr.Api.Dtos;
+using Microsoft.Extensions.Hosting;
 using DeviceTrackr.Api.Models;
 using DeviceTrackr.Api.Repositories;
 
 namespace DeviceTrackr.Api.Services;
 
-public class DeviceService(DeviceRepository repo, UserRepository users)
+public class DeviceService(
+    DeviceRepository repo,
+    UserRepository users,
+    GeminiDescriptionService gemini,
+    IConfiguration configuration,
+    IHostEnvironment hostEnvironment)
 {
     public List<Device> GetAll() => repo.GetAll();
 
@@ -12,6 +19,7 @@ public class DeviceService(DeviceRepository repo, UserRepository users)
 
     public Device Create(Device device)
     {
+        device.Description = string.IsNullOrWhiteSpace(device.Description) ? string.Empty : device.Description.Trim();
         return repo.Create(device);
     }
 
@@ -36,7 +44,7 @@ public class DeviceService(DeviceRepository repo, UserRepository users)
         existing.OsVersion = device.OsVersion;
         existing.Processor = device.Processor;
         existing.RamAmountGb = device.RamAmountGb;
-        existing.Description = device.Description;
+        existing.Description = string.IsNullOrWhiteSpace(device.Description) ? string.Empty : device.Description.Trim();
         repo.SaveChanges();
         return (true, null);
     }
@@ -105,5 +113,39 @@ public class DeviceService(DeviceRepository repo, UserRepository users)
         device.AssignedUserId = null;
         repo.SaveChanges();
         return (true, string.Empty);
+    }
+
+    /// <summary>Generates description with Gemini and persists it. Works for any device (assigned or not); only updates Description.</summary>
+    /// <returns>GeminiDetail: extra message when Error is gemini_failed (from Google API or client).</returns>
+    public async Task<(bool Success, string? Error, Device? Device, string? GeminiDetail)> GenerateAiDescriptionAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        if (string.IsNullOrWhiteSpace(GeminiConfigHelper.ResolveApiKey(configuration, hostEnvironment.ContentRootPath)))
+        {
+            return (false, "no_api_key", null, null);
+        }
+
+        var existing = repo.GetByIdTracked(id);
+        if (existing is null)
+        {
+            return (false, "not_found", null, null);
+        }
+
+        var (text, geminiHint) = await gemini.GenerateDeviceDescriptionAsync(existing, cancellationToken);
+        if (string.IsNullOrWhiteSpace(text))
+        {
+            return (false, "gemini_failed", null, geminiHint);
+        }
+
+        const int maxDesc = 2000;
+        if (text.Length > maxDesc)
+        {
+            text = text[..maxDesc];
+        }
+
+        existing.Description = text;
+        repo.SaveChanges();
+        return (true, null, repo.GetById(id), null);
     }
 }

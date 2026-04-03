@@ -375,6 +375,50 @@ label {
   letter-spacing: 0.04em;
 }
 
+label.description-field {
+  text-transform: none;
+  letter-spacing: normal;
+  font-weight: 500;
+  color: var(--prime-text-muted);
+}
+
+label.description-field textarea {
+  text-transform: none;
+}
+
+label.description-field .btn-ai {
+  margin-top: 8px;
+  justify-self: start;
+  background: linear-gradient(180deg, rgba(0, 168, 225, 0.25) 0%, rgba(0, 168, 225, 0.12) 100%);
+  border: 1px solid var(--prime-accent);
+  color: var(--prime-accent-hover);
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: var(--prime-radius-sm);
+  cursor: pointer;
+  font-size: 0.8125rem;
+}
+
+label.description-field .btn-ai:hover:not(:disabled) {
+  background: var(--prime-accent-dim);
+  color: var(--prime-text);
+}
+
+label.description-field .btn-ai:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+label.description-field .ai-hint {
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--prime-text-muted);
+  line-height: 1.4;
+  margin-top: 4px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
 input,
 select,
 textarea {

@@ -10,10 +10,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("device-trackr-api-7c3e9a2b-4f1d-4e8c-9b6a-5d2e8f1a3c4b")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ec04f541fdf9f21251dd24de22d192bc23c6c1d0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1985ca76c18f0c0e199070f04b4a8a402a1a66c6")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

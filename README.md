@@ -105,6 +105,26 @@ Create the schema, then seed:
 
 In `backend/DeviceTrackr.Api/appsettings.json`, set **`ConnectionStrings:DefaultConnection`** for your SQL instance (server, database, authentication). **Do not commit real passwords** to Git; use User Secrets or environment variables in production.
 
+You can also set the connection string via environment variable **`ConnectionStrings__DefaultConnection`** (same `__` rule as below).
+
+### 2b. Gemini API key (AI descriptions, optional)
+
+You can put the key in **`appsettings.json`** → `Gemini:ApiKey` for local dev (do **not** commit real keys). Alternatively use an environment variable so it never lands in Git:
+
+| Config key | Environment variable |
+|------------|----------------------|
+| `Gemini:ApiKey` | `Gemini__ApiKey` |
+| `Gemini:Model` | `Gemini__Model` (optional; default is `gemini-1.5-flash` in appsettings) |
+
+Examples:
+
+- **PowerShell (current session):** `$env:Gemini__ApiKey = "your-key-here"`
+- **Windows (persistent):** System Properties → Environment variables, or `setx Gemini__ApiKey "your-key-here"`
+- **Linux/macOS:** `export Gemini__ApiKey=your-key-here`
+- **Docker:** `-e Gemini__ApiKey=your-key-here` (or compose `environment:`)
+
+Alternative: `dotnet user-secrets set "Gemini:ApiKey" "your-key-here"` in the API project folder.
+
 ### 3. API
 
 ```bash
