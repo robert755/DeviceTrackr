@@ -1,3 +1,4 @@
+using DeviceTrackr.Api.Dtos;
 using DeviceTrackr.Api.Models;
 using DeviceTrackr.Api.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -40,5 +41,19 @@ public class DevicesController(DeviceService service) : ControllerBase
     {
         var deleted = service.Delete(id);
         return deleted ? NoContent() : NotFound();
+    }
+
+    [HttpPost("{id:int}/assign")]
+    public IActionResult Assign(int id, [FromBody] AssignDeviceRequestDto request)
+    {
+        var result = service.AssignToUser(id, request);
+        return result.Success ? NoContent() : BadRequest(new { message = result.Error });
+    }
+
+    [HttpPost("{id:int}/unassign")]
+    public IActionResult Unassign(int id, [FromBody] AssignDeviceRequestDto request)
+    {
+        var result = service.UnassignFromUser(id, request);
+        return result.Success ? NoContent() : BadRequest(new { message = result.Error });
     }
 }

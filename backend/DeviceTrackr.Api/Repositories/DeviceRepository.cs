@@ -8,12 +8,17 @@ public class DeviceRepository(DeviceTrackrDbContext db)
 {
     public List<Device> GetAll()
     {
-        return db.Devices.AsNoTracking().OrderBy(x => x.Name).ToList();
+        return db.Devices.AsNoTracking().Include(x => x.AssignedUser).OrderBy(x => x.Name).ToList();
     }
 
     public Device? GetById(int id)
     {
-        return db.Devices.AsNoTracking().FirstOrDefault(x => x.Id == id);
+        return db.Devices.AsNoTracking().Include(x => x.AssignedUser).FirstOrDefault(x => x.Id == id);
+    }
+
+    public Device? GetByIdTracked(int id)
+    {
+        return db.Devices.FirstOrDefault(x => x.Id == id);
     }
 
     public Device Create(Device device)
@@ -54,5 +59,10 @@ public class DeviceRepository(DeviceTrackrDbContext db)
         db.Devices.Remove(existing);
         db.SaveChanges();
         return true;
+    }
+
+    public void SaveChanges()
+    {
+        db.SaveChanges();
     }
 }

@@ -16,6 +16,11 @@ public class UserRepository(DeviceTrackrDbContext db)
         return db.Users.AsNoTracking().FirstOrDefault(x => x.Id == id);
     }
 
+    public User? GetByEmail(string email)
+    {
+        return db.Users.FirstOrDefault(x => x.Email == email);
+    }
+
     public User Create(User user)
     {
         db.Users.Add(user);
@@ -36,6 +41,11 @@ public class UserRepository(DeviceTrackrDbContext db)
         existing.Location = user.Location;
         db.SaveChanges();
         return true;
+    }
+
+    public bool EmailExists(string email)
+    {
+        return db.Users.Any(x => x.Email == email);
     }
 
     public bool Delete(int id)

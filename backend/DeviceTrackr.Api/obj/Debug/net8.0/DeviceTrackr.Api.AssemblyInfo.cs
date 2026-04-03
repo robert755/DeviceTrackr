@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+2e8c6a2d5ccc3270b6410039c268f2b6cb2e641a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7d7e44d2a5a391bbcfa8ef70af5670fd075de209")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
