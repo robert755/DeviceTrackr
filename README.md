@@ -1,169 +1,75 @@
 # DeviceTrackr
 
-Web application for **tracking company-owned mobile devices**: technical details, user **role/location**, and **who is currently using** each device (assignment).
+Web app for **company-owned devices** (phones, tablets, laptops): specs, who they are assigned to, search, and optional **Gemini**-generated descriptions.
 
-## Tech stack
+**Stack:** SQL Server · ASP.NET Core 8 Web API (EF Core) · Angular 17 (standalone).
 
-| Layer | Technology |
-|--------|------------|
-| Database | Microsoft SQL Server |
-| API | ASP.NET Core Web API (.NET 8), Entity Framework Core |
-| Frontend | Angular 17 (standalone components, routing) |
-| Version control | Git |
+**Repo layout**
 
-## Repository layout
-
-```
-DeviceTrackr/
-├── database/          # Idempotent SQL scripts (schema + demo data)
-├── backend/
-│   └── DeviceTrackr.Api/   # REST API
-└── frontend/
-    └── devicetrackr-web/   # Angular app
-```
+| Path | Role |
+|------|------|
+| `database/` | SQL scripts (schema + seed) |
+| `backend/DeviceTrackr.Api/` | REST API |
+| `frontend/devicetrackr-web/` | Angular UI |
 
 ---
 
-## What the application does
+## Backend API (`/api/...`)
 
-### 1. Database
+Base URL in dev is usually `http://localhost:5035`. Swagger is on in **Development**.
 
-- **`database/01-create-database-and-tables.sql`** – Creates the **DeviceTrackr** database (if missing), **Users** and **Devices** tables, unique index on user email, and foreign key from device to assigned user (`AssignedUserId`).
-- **`database/02-seed-data.sql`** – Inserts demo users and devices (MERGE; safe to run multiple times).
+### Auth — `api/auth`
 
-**Users:** name, email, role, location, password hash.  
-**Devices:** name, manufacturer, type (phone/tablet), OS, OS version, processor, RAM, description, optional assigned user.
+| Method | Route | Description |
+|--------|--------|-------------|
+| POST | `/register` | Create account (email, password, role, location; optional display name) |
+| POST | `/login` | Login; returns user id, name, email (session is kept in the Angular app) |
 
-### 2. API (backend)
+### Devices — `api/devices`
 
-Runs by default on **`http://localhost:5035`** (see `Properties/launchSettings.json`). Swagger is enabled in Development.
+| Method | Route | Description |
+|--------|--------|-------------|
+| GET | `/` | List all devices (includes assigned user when set) |
+| GET | `/search?q=` | Free-text search (name, manufacturer, OS fields, description); empty `q` = all |
+| GET | `/{id}` | Get one device |
+| POST | `/` | Create device |
+| PUT | `/{id}` | Update **only if unassigned** |
+| DELETE | `/{id}` | Delete **only if unassigned** |
+| POST | `/{id}/assign` | Body `{ "userId": n }` — assign to user |
+| POST | `/{id}/unassign` | Body `{ "userId": n }` — unassign (only the assigned user) |
+| POST | `/{id}/generate-description` | Gemini writes `Description` (needs `Gemini:ApiKey`) |
 
-**Authentication (no cookie/JWT in the browser—session is kept in the frontend after login):**
+### Users — `api/users`
 
-| Method | Route | Purpose |
-|--------|-------|---------|
-| POST | `/api/auth/register` | New account: email, password, role, location; optional display name |
-| POST | `/api/auth/login` | Login with email and password |
+| Method | Route | Description |
+|--------|--------|-------------|
+| GET | `/` | List users |
+| GET | `/{id}` | Get user |
+| POST | `/` | Create user |
+| PUT | `/{id}` | Update user |
+| DELETE | `/{id}` | Delete user |
 
-Response shape: `userId`, `name`, `email`. Passwords are stored as **SHA256 + Base64** (hashed, not plain text).
-
-**Devices:**
-
-| Method | Route | Purpose |
-|--------|-------|---------|
-| GET | `/api/devices` | List (includes assigned user when present) |
-| GET | `/api/devices/{id}` | Details |
-| POST | `/api/devices` | Create |
-| PUT | `/api/devices/{id}` | Update **only if the device is unassigned** |
-| DELETE | `/api/devices/{id}` | Delete **only if the device is unassigned** |
-| POST | `/api/devices/{id}/assign` | Assign to user (body: `{ "userId": n }`) |
-| POST | `/api/devices/{id}/unassign` | Unassign (only by the user who holds the assignment) |
-
-**PUT** or **DELETE** on an **assigned** device returns **400** with an explanatory message.
-
-**Users:** Standard CRUD on `/api/users` (used by the UI for lists; password hash is not exposed in JSON).
-
-**CORS:** Allowed for the Angular dev origin (`http://localhost:4200`).
-
-### 3. Frontend (Angular)
-
-Dark UI theme.
-
-**Routes:**
-
-| Path | Content |
-|------|---------|
-| `/login` | Sign in; link to registration |
-| `/register` | Form: email, password, role, location, optional name |
-| `/devices` | Device dashboard (requires in-memory “session” after login/register) |
-
-**Guards:** If you are not “logged in” in memory, you are redirected to login; if you are logged in, login/register send you to devices.
-
-**On the devices page you can:**
-
-- View the list showing **who uses** each device (or “Unassigned”).
-- Open **details** for a row.
-- **Add** new devices (field validation; unique name).
-- **Edit** and **delete** only **unassigned** devices (buttons shown accordingly; backend enforces the same rule).
-- **Assign to me** when signed in and the device is free.
-- **Unassign** only for devices assigned to you.
-
-The API base URL is set in `device-api.service.ts` (`http://localhost:5035/api`). If you change the API port, update it there as well.
+**CORS** allows `http://localhost:4200` for the Angular dev server.
 
 ---
 
-## Running locally
+## Run locally
 
-### 1. SQL Server
+1. **Database** — run `database/01-create-database-and-tables.sql`, then `02-seed-data.sql`.
 
-Create the schema, then seed:
+2. **User secrets** (from `backend\DeviceTrackr.Api`; never commit real secrets):
 
-1. Run `database/01-create-database-and-tables.sql`
-2. Run `database/02-seed-data.sql`
+   ```powershell
+   cd backend\DeviceTrackr.Api
+   dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=...;Database=DeviceTrackr;...;TrustServerCertificate=True;"
+   dotnet user-secrets set "Gemini:ApiKey" "YOUR_KEY"
+   ```
 
-### 2. Local secrets — **dotnet user-secrets** (recommended)
+   Optional: `dotnet user-secrets set "Gemini:Model" "gemini-2.5-flash"`. List with `dotnet user-secrets list`.  
+   Alternative: env vars `ConnectionStrings__DefaultConnection`, `Gemini__ApiKey`.
 
-Keep **passwords and API keys out of Git**. The API project already has a `UserSecretsId` in `DeviceTrackr.Api.csproj`; in **Development**, ASP.NET Core loads user secrets **after** `appsettings.json` and **overrides** those values.
+3. **API** — `dotnet run` in `backend\DeviceTrackr.Api` (see console for URL + Swagger).
 
-Open a terminal in the API folder (from the repo root):
+4. **Frontend** — `cd frontend/devicetrackr-web` → `npm install` → `ng serve` → `http://localhost:4200`. Update `device-api.service.ts` if the API port changes.
 
-```powershell
-cd backend\DeviceTrackr.Api
-```
-
-The `.csproj` already defines a **UserSecretsId**, so you can skip `dotnet user-secrets init` unless the CLI tells you to initialize.
-
-**Gemini API key** (optional, for AI-generated descriptions) — from [Google AI Studio](https://aistudio.google.com/apikey):
-
-```powershell
-dotnet user-secrets set "Gemini:ApiKey" "YOUR_GEMINI_API_KEY"
-```
-
-**Optional — Gemini model:**
-
-```powershell
-dotnet user-secrets set "Gemini:Model" "gemini-2.5-flash"
-```
-
-**Verify secrets are registered:**
-
-```powershell
-dotnet user-secrets list
-```
-
-`appsettings.json` can stay with placeholders (`CHANGE_ME`, empty `Gemini:ApiKey`); **user-secrets win at runtime** when `ASPNETCORE_ENVIRONMENT` is `Development` (default for `dotnet run` with the included launch profile).
-
-**Alternative (no user-secrets):** environment variables use `__` instead of `:` — e.g. `ConnectionStrings__DefaultConnection`, `Gemini__ApiKey`. Useful for Docker or production hosts.
-
-### 3. API
-
-```powershell
-cd backend\DeviceTrackr.Api
-dotnet run
-```
-
-Open Swagger at the URL shown in the console (e.g. `http://localhost:5035/swagger`).
-
-### 4. Angular
-
-```bash
-cd frontend/devicetrackr-web
-npm install
-ng serve
-```
-
-App URL: **`http://localhost:4200`**
-
-### Demo accounts (after seed)
-
-As documented in `02-seed-data.sql`:
-
-| Email | Password |
-|--------|----------|
-| ana@example.com | ana123 |
-| mihai@example.com | mihai123 |
-| elena@example.com | elena123 |
-
-The seed assigns **iPhone 15** to **Ana** for demo purposes.
-
----
+**Demo accounts** (after seed, see `02-seed-data.sql`): `ana@example.com` / `ana123`, `mihai@example.com` / `mihai123`, `elena@example.com` / `elena123`.
