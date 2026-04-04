@@ -15,6 +15,13 @@ public class DevicesController(DeviceService service) : ControllerBase
         return Ok(service.GetAll());
     }
 
+    /// <summary>Search devices by free text (name, manufacturer, OS, version, processor, description). Omit or leave <paramref name="q"/> empty to return all devices.</summary>
+    [HttpGet("search")]
+    public ActionResult<List<Device>> Search([FromQuery] string? q)
+    {
+        return Ok(service.Search(q));
+    }
+
     [HttpGet("{id:int}")]
     public ActionResult<Device> GetById(int id)
     {

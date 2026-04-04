@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "TV+OiG4r/NlIzozwHNmKUq5Y1YdYP6vhFZ5KjS8jdEPMQsx16efpx6s2tEwHxLDxLEztFAGABmkxXem37Ye11A==",
+  "dgSpecHash": "niwa0EGY8V5GYfNSM/GL6gplk27ZOt/8kZ2/O2eTUwb4pWJEBu5A+X0CcpmFX55M5G4PbrgNuO33RjACIYX3jg==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.api\\DeviceTrackr.Api.csproj",
+  "projectFilePath": "c:\\Users\\Ciceu\\OneDrive\\Documente\\GitHub\\DeviceTrackr\\backend\\DeviceTrackr.Api\\DeviceTrackr.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Ciceu\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Ciceu\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

@@ -15,6 +15,8 @@ public class DeviceService(
 {
     public List<Device> GetAll() => repo.GetAll();
 
+    public List<Device> Search(string? query) => repo.SearchByText(query);
+
     public Device? GetById(int id) => repo.GetById(id);
 
     public Device Create(Device device)

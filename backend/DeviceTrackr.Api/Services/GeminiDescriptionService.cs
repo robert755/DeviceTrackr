@@ -46,9 +46,15 @@ public class GeminiDescriptionService(
         var url =
             $"https://generativelanguage.googleapis.com/v1beta/models/{Uri.EscapeDataString(model)}:generateContent?key={Uri.EscapeDataString(apiKey)}";
 
-        var typeLabel = device.Type == DeviceType.Phone ? "smartphone" : "tablet";
+        var typeLabel = device.Type switch
+        {
+            DeviceType.Phone => "smartphone",
+            DeviceType.Tablet => "tablet",
+            DeviceType.Laptop => "laptop",
+            _ => "device"
+        };
         var prompt = new StringBuilder()
-            .AppendLine("Write a short internal IT inventory description for this company-owned mobile device.")
+            .AppendLine("Write a short internal IT inventory description for this company-owned IT device.")
             .AppendLine("Requirements: 2-4 sentences, plain text only, no markdown, no bullet lists, professional tone but user friendly.")
             .AppendLine("Use only the facts below; do not invent model numbers or prices.")
             .AppendLine()

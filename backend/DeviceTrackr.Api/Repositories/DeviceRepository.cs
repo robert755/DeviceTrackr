@@ -16,6 +16,28 @@ public class DeviceRepository(DeviceTrackrDbContext db)
         return db.Devices.AsNoTracking().Include(x => x.AssignedUser).FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>Free-text search across main device fields; whitespace-only query returns all devices (same ordering as GetAll).</summary>
+    public List<Device> SearchByText(string? query)
+    {
+        var baseQuery = db.Devices.AsNoTracking().Include(x => x.AssignedUser);
+        if (string.IsNullOrWhiteSpace(query))
+        {
+            return baseQuery.OrderBy(x => x.Name).ToList();
+        }
+
+        var term = query.Trim();
+        return baseQuery
+            .Where(d =>
+                d.Name.Contains(term)
+                || d.Manufacturer.Contains(term)
+                || d.OperatingSystem.Contains(term)
+                || d.OsVersion.Contains(term)
+                || d.Processor.Contains(term)
+                || d.Description.Contains(term))
+            .OrderBy(x => x.Name)
+            .ToList();
+    }
+
     public Device? GetByIdTracked(int id)
     {
         return db.Devices.FirstOrDefault(x => x.Id == id);
