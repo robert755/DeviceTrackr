@@ -30,7 +30,7 @@ export class LoginComponent {
   submit(): void {
     this.errorMessage = '';
     if (this.form.invalid) {
-      this.errorMessage = 'Completează email și parola.';
+      this.errorMessage = 'Enter email and password.';
       this.form.markAllAsTouched();
       return;
     }
@@ -41,7 +41,7 @@ export class LoginComponent {
         this.session.setUser(user);
         void this.router.navigate(['/devices']);
       },
-      error: () => (this.errorMessage = 'Autentificare eșuată.')
+      error: () => (this.errorMessage = 'Sign-in failed.')
     });
   }
 }

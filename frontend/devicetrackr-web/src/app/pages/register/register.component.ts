@@ -33,7 +33,7 @@ export class RegisterComponent {
   submit(): void {
     this.errorMessage = '';
     if (this.form.invalid) {
-      this.errorMessage = 'Completează toate câmpurile obligatorii.';
+      this.errorMessage = 'Fill in all required fields.';
       this.form.markAllAsTouched();
       return;
     }
@@ -52,7 +52,7 @@ export class RegisterComponent {
         this.session.setUser(user);
         void this.router.navigate(['/devices']);
       },
-      error: () => (this.errorMessage = 'Înregistrarea a eșuat.')
+      error: () => (this.errorMessage = 'Registration failed.')
     });
   }
 }

@@ -164,6 +164,28 @@ h2 {
   margin-bottom: 0;
 }
 
+.panel-header-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+  justify-content: flex-end;
+  min-width: min(100%, 220px);
+}
+
+label.search-field {
+  flex: 1;
+  min-width: 200px;
+  max-width: 360px;
+  margin-bottom: 0;
+}
+
+label.search-field input {
+  margin-top: 0;
+  width: 100%;
+}
+
 /* Table */
 .table-wrap {
   overflow-x: auto;

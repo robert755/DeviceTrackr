@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Device, DevicePayload } from '../models/device';
 import {
@@ -17,6 +17,13 @@ export class DeviceApiService {
 
   getDevices(): Observable<Device[]> {
     return this.http.get<Device[]>(`${this.baseUrl}/devices`);
+  }
+
+  /** Free-text search; omit query or pass blank to get all devices (GET /api/devices/search). */
+  searchDevices(query?: string | null): Observable<Device[]> {
+    const q = query?.trim();
+    const params = q ? new HttpParams().set('q', q) : new HttpParams();
+    return this.http.get<Device[]>(`${this.baseUrl}/devices/search`, { params });
   }
 
   getDevice(id: number): Observable<Device> {
