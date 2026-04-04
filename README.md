@@ -113,12 +113,6 @@ cd backend\DeviceTrackr.Api
 
 The `.csproj` already defines a **UserSecretsId**, so you can skip `dotnet user-secrets init` unless the CLI tells you to initialize.
 
-**SQL connection string** — replace `YOUR_PASSWORD` (and server/user if needed):
-
-```powershell
-dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=.\SQLEXPRESS;Database=DeviceTrackr;User Id=sa;Password=YOUR_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true"
-```
-
 **Gemini API key** (optional, for AI-generated descriptions) — from [Google AI Studio](https://aistudio.google.com/apikey):
 
 ```powershell
