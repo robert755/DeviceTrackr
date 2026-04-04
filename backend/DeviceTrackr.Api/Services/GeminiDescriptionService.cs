@@ -21,7 +21,6 @@ public class GeminiDescriptionService(
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
-    /// <returns>Text on success; on failure, Text is null and ErrorHint explains why (safe to show to developers).</returns>
     public async Task<(string? Text, string? ErrorHint)> GenerateDeviceDescriptionAsync(
         Device device,
         CancellationToken cancellationToken = default)
@@ -183,7 +182,6 @@ public class GeminiDescriptionService(
         }
         catch
         {
-            // ignore
         }
 
         return null;

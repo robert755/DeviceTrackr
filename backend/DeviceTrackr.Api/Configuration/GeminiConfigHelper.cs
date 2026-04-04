@@ -3,10 +3,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace DeviceTrackr.Api.Configuration;
 
-/// <summary>
-/// Resolves Gemini API key: env vars first, then merged IConfiguration, then raw appsettings files on disk.
-/// Fixes the case where an empty <c>Gemini__ApiKey</c> environment variable overrides a valid key in appsettings.json.
-/// </summary>
+// If Gemini__ApiKey is set but empty, it overrides appsettings.json; we fall back to reading the JSON files from disk.
 public static class GeminiConfigHelper
 {
     private static readonly string[] EnvVarNames =
@@ -75,7 +72,6 @@ public static class GeminiConfigHelper
             }
             catch
             {
-                // ignore malformed json
             }
         }
 

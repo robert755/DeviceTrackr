@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,7 +40,6 @@ if (string.IsNullOrWhiteSpace(GeminiConfigHelper.ResolveApiKey(app.Configuration
         "Gemini API key is missing after resolving env, merged config, and appsettings files. Set GEMINI_API_KEY / Gemini__ApiKey, or Gemini:ApiKey in appsettings.json (avoid an empty Gemini__ApiKey env var — it overrides the file).");
 }
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

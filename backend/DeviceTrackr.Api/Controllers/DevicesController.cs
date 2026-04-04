@@ -15,7 +15,6 @@ public class DevicesController(DeviceService service) : ControllerBase
         return Ok(service.GetAll());
     }
 
-    /// <summary>Search devices by free text (name, manufacturer, OS, version, processor, description). Omit or leave <paramref name="q"/> empty to return all devices.</summary>
     [HttpGet("search")]
     public ActionResult<List<Device>> Search([FromQuery] string? q)
     {
@@ -84,7 +83,6 @@ public class DevicesController(DeviceService service) : ControllerBase
         return result.Success ? NoContent() : BadRequest(new { message = result.Error });
     }
 
-    /// <summary>Uses Google Gemini to write a description from device specs and saves it to Description.</summary>
     [HttpPost("{id:int}/generate-description")]
     public async Task<ActionResult<Device>> GenerateDescription(int id, CancellationToken cancellationToken)
     {

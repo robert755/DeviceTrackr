@@ -16,7 +16,6 @@ public class DeviceRepository(DeviceTrackrDbContext db)
         return db.Devices.AsNoTracking().Include(x => x.AssignedUser).FirstOrDefault(x => x.Id == id);
     }
 
-    /// <summary>Free-text search across main device fields; whitespace-only query returns all devices (same ordering as GetAll).</summary>
     public List<Device> SearchByText(string? query)
     {
         var baseQuery = db.Devices.AsNoTracking().Include(x => x.AssignedUser);

@@ -159,7 +159,6 @@ export class DevicesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /** Only devices without an assigned user can be modified or deleted. */
   canModifyDevice(device: Device): boolean {
     return !device.assignedUserId;
   }

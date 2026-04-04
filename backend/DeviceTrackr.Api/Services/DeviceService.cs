@@ -25,7 +25,6 @@ public class DeviceService(
         return repo.Create(device);
     }
 
-    /// <summary>Actualizează doar dacă dispozitivul nu e alocat. Erori: not_found, assigned.</summary>
     public (bool Success, string? Error) Update(int id, Device device)
     {
         var existing = repo.GetByIdTracked(id);
@@ -51,7 +50,6 @@ public class DeviceService(
         return (true, null);
     }
 
-    /// <summary>Șterge doar dacă dispozitivul nu e alocat. Erori: not_found, assigned.</summary>
     public (bool Success, string? Error) Delete(int id)
     {
         var existing = repo.GetByIdTracked(id);
@@ -117,8 +115,6 @@ public class DeviceService(
         return (true, string.Empty);
     }
 
-    /// <summary>Generates description with Gemini and persists it. Works for any device (assigned or not); only updates Description.</summary>
-    /// <returns>GeminiDetail: extra message when Error is gemini_failed (from Google API or client).</returns>
     public async Task<(bool Success, string? Error, Device? Device, string? GeminiDetail)> GenerateAiDescriptionAsync(
         int id,
         CancellationToken cancellationToken = default)

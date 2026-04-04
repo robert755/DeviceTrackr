@@ -19,7 +19,6 @@ export class DeviceApiService {
     return this.http.get<Device[]>(`${this.baseUrl}/devices`);
   }
 
-  /** Free-text search; omit query or pass blank to get all devices (GET /api/devices/search). */
   searchDevices(query?: string | null): Observable<Device[]> {
     const q = query?.trim();
     const params = q ? new HttpParams().set('q', q) : new HttpParams();
@@ -62,7 +61,6 @@ export class DeviceApiService {
     return this.http.post<void>(`${this.baseUrl}/devices/${deviceId}/unassign`, { userId });
   }
 
-  /** Calls Gemini on the server and saves the returned text to Description. */
   generateDeviceDescription(deviceId: number): Observable<Device> {
     return this.http.post<Device>(`${this.baseUrl}/devices/${deviceId}/generate-description`, {});
   }
