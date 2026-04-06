@@ -23,7 +23,7 @@ Base URL in dev is usually `http://localhost:5035`. Swagger is on in **Developme
 | Method | Route | Description |
 |--------|--------|-------------|
 | POST | `/register` | Create account (email, password, role, location; optional display name) |
-| POST | `/login` | Login; returns user id, name, email (session is kept in the Angular app) |
+| POST | `/login` | Login; returns user id, name, email |
 
 ### Devices — `api/devices`
 
