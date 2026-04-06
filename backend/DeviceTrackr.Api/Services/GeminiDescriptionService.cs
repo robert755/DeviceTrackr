@@ -53,9 +53,9 @@ public class GeminiDescriptionService(
             _ => "device"
         };
         var prompt = new StringBuilder()
-            .AppendLine("Write a short internal IT inventory description for this company-owned IT device.")
-            .AppendLine("Requirements: 2-4 sentences, plain text only, no markdown, no bullet lists, professional tone but user friendly.")
-            .AppendLine("Use only the facts below; do not invent model numbers or prices.")
+            .AppendLine("Write a short internal IT inventory description for this company-owned device.")
+            .AppendLine("Requirements: 2-4 complete sentences, plain text only, no markdown, no bullet lists, professional but friendly tone.")
+            .AppendLine("End each sentence properly. Use only the facts below; do not invent model numbers or prices.")
             .AppendLine()
             .AppendLine($"Name: {device.Name}")
             .AppendLine($"Manufacturer: {device.Manufacturer}")
@@ -66,7 +66,6 @@ public class GeminiDescriptionService(
             .AppendLine()
             .AppendLine("Write the description in English.")
             .ToString();
-
         var body = new
         {
             contents = new[]
@@ -76,7 +75,7 @@ public class GeminiDescriptionService(
             generationConfig = new
             {
                 temperature = 0.35,
-                maxOutputTokens = 512
+                maxOutputTokens = 1024
             }
         };
 
@@ -160,12 +159,25 @@ public class GeminiDescriptionService(
             return false;
         }
 
-        if (!parts[0].TryGetProperty("text", out var textEl))
+        var sb = new StringBuilder();
+        foreach (var part in parts.EnumerateArray())
         {
-            return false;
+            if (part.TryGetProperty("text", out var textEl))
+            {
+                var segment = textEl.GetString();
+                if (!string.IsNullOrEmpty(segment))
+                {
+                    if (sb.Length > 0)
+                    {
+                        sb.Append(' ');
+                    }
+
+                    sb.Append(segment);
+                }
+            }
         }
 
-        text = textEl.GetString();
+        text = sb.Length > 0 ? sb.ToString() : null;
         return !string.IsNullOrWhiteSpace(text);
     }
 

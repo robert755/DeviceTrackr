@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed38b4c6a2293bcfa4fb6f092920b920f8768b6c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8b23b6a21382c839d6f92371291235bf96c9f4b0")]
 [assembly: System.Reflection.AssemblyProductAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DeviceTrackr.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
